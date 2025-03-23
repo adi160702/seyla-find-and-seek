@@ -32,6 +32,11 @@
       font-size: 20px;
       color: #333;
     }
+    /* This ensures images show in their original size, centered. */
+    #result img {
+      display: block;
+      margin: 20px auto 0;
+    }
   </style>
 </head>
 <body>
@@ -52,21 +57,34 @@
     const gameContainer = document.getElementById('game-container');
     const resultDiv = document.getElementById('result');
     
+    // Show the game container after clicking "Start Here"
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
       gameContainer.style.display = 'block';
     });
     
+    // Strawberries button
     document.getElementById('strawberries').addEventListener('click', () => {
-      resultDiv.innerHTML = '<p>You found <strong>Sweet Tree Cafe</strong>!</p>';
+      resultDiv.innerHTML = `
+        <p>You found <strong>Sweet Tree Cafe</strong>!</p>
+        <img src="sweet-tree.jpeg" alt="Sweet Tree Cafe">
+      `;
     });
     
+    // Coffee button
     document.getElementById('coffee').addEventListener('click', () => {
-      resultDiv.innerHTML = '<p>You found <strong>Block Cafe</strong>!</p>';
+      resultDiv.innerHTML = `
+        <p>You found <strong>Block Cafe</strong>!</p>
+        <img src="block-cafe.jpeg" alt="Block Cafe">
+      `;
     });
     
+    // Cookies button
     document.getElementById('cookies').addEventListener('click', () => {
-      resultDiv.innerHTML = '<p>You found <strong>Saint Jean Cafe</strong>!</p>';
+      resultDiv.innerHTML = `
+        <p>You found <strong>Saint Jean Cafe</strong>!</p>
+        <img src="saint-jean.jpeg" alt="Saint Jean Cafe">
+      `;
     });
   </script>
 </body>
