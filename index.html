@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seyla Find and Seek</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background: #f9f9f9;
+    }
+    #game-container {
+      display: none;
+      margin-top: 20px;
+    }
+    .option-button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: #007BFF;
+      color: #fff;
+      border-radius: 5px;
+    }
+    .option-button:hover {
+      background: #0056b3;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Seyla Find and Seek</h1>
+  <button id="startButton" class="option-button">Start Here</button>
+  
+  <div id="game-container">
+    <h2>Choose one:</h2>
+    <button class="option-button" id="strawberries">Strawberries</button>
+    <button class="option-button" id="coffee">Coffee</button>
+    <button class="option-button" id="cookies">Cookies</button>
+  </div>
+  
+  <div id="result"></div>
+  
+  <script>
+    const startButton = document.getElementById('startButton');
+    const gameContainer = document.getElementById('game-container');
+    const resultDiv = document.getElementById('result');
+    
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none';
+      gameContainer.style.display = 'block';
+    });
+    
+    document.getElementById('strawberries').addEventListener('click', () => {
+      resultDiv.innerHTML = '<p>You found <strong>Sweet Tree Cafe</strong>!</p>';
+    });
+    
+    document.getElementById('coffee').addEventListener('click', () => {
+      resultDiv.innerHTML = '<p>You found <strong>Block Cafe</strong>!</p>';
+    });
+    
+    document.getElementById('cookies').addEventListener('click', () => {
+      resultDiv.innerHTML = '<p>You found <strong>Saint Jean Cafe</strong>!</p>';
+    });
+  </script>
+</body>
+</html>
