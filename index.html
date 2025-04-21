@@ -32,7 +32,7 @@
       font-size: 20px;
       color: #333;
     }
-    /* This ensures images show in their original size, centered. */
+    /* Images display in their original dimensions */
     #result img {
       display: block;
       margin: 20px auto 0;
@@ -57,6 +57,24 @@
     const gameContainer = document.getElementById('game-container');
     const resultDiv = document.getElementById('result');
     
+    // Replace with your Google Apps Script Web App URL
+    const loggingEndpoint = "https://script.google.com/macros/s/AKfycbwT06uMFgibbRVCbjzNfiZsvSCDCse1zue2qG-B-MKXkf-VFDZN6w1f3u15oJV_KC806Q/exec";
+
+    // Function to log the click by sending a POST request to your endpoint
+    function logClick(buttonName) {
+      const timestamp = new Date().toISOString();
+      fetch(loggingEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ button: buttonName, time: timestamp })
+      })
+      .then(response => response.json())
+      .then(data => console.log("Logged:", data))
+      .catch(error => console.error("Error logging:", error));
+    }
+    
     // Show the game container after clicking "Start Here"
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
@@ -65,6 +83,7 @@
     
     // Strawberries button
     document.getElementById('strawberries').addEventListener('click', () => {
+      logClick('Strawberries');
       resultDiv.innerHTML = `
         <p>You found <strong>Sweet Tree Cafe</strong>!</p>
         <img src="sweet-tree.jpeg" alt="Sweet Tree Cafe">
@@ -73,17 +92,19 @@
     
     // Coffee button
     document.getElementById('coffee').addEventListener('click', () => {
+      logClick('Coffee');
       resultDiv.innerHTML = `
         <p>You found <strong>Block Cafe</strong>!</p>
-        <img src="block-cafe.jpeg" alt="Block Cafe">
+        <img src="the block.jpeg" alt="Block Cafe">
       `;
     });
     
     // Cookies button
     document.getElementById('cookies').addEventListener('click', () => {
+      logClick('Cookies');
       resultDiv.innerHTML = `
         <p>You found <strong>Saint Jean Cafe</strong>!</p>
-        <img src="saint-jean.jpeg" alt="Saint Jean Cafe">
+        <img src="saint jean.jpeg" alt="Saint Jean Cafe">
       `;
     });
   </script>
