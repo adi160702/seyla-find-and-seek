@@ -4,15 +4,39 @@
   <meta charset="UTF-8">
   <title>Seyla Find and Seek</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: #f9f9f9; }
-    #game-container { display: none; margin-top: 20px; }
-    .option-button {
-      padding: 10px 20px; margin: 10px; font-size: 16px; cursor: pointer;
-      border: none; background: #007BFF; color: #fff; border-radius: 5px;
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background: #f9f9f9;
     }
-    .option-button:hover { background: #0056b3; }
-    #result { margin-top: 30px; font-size: 20px; color: #333; }
-    #result img { display: block; margin: 20px auto 0; }
+    #game-container {
+      display: none;
+      margin-top: 20px;
+    }
+    .option-button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: #007BFF;
+      color: #fff;
+      border-radius: 5px;
+    }
+    .option-button:hover {
+      background: #0056b3;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #333;
+    }
+    #result img {
+      display: block;
+      margin: 20px auto 0;
+      /* original dimensions preserved */
+    }
   </style>
 </head>
 <body>
@@ -28,39 +52,24 @@
 
   <div id="result"></div>
 
-  <!-- Hidden iframe to receive form responses -->
-  <iframe name="log_target" style="display:none;"></iframe>
-
   <script>
-    const startButton    = document.getElementById('startButton');
-    const gameContainer  = document.getElementById('game-container');
-    const resultDiv      = document.getElementById('result');
-    // Your Apps Script URL here:
-    const loggingURL = "https://script.google.com/macros/s/AKfycbzoFLVYBnfPk5MZBvaGb2b7E1YiUl9z_zM-OyLAXbB8xMLTGzANFBrw__pK247NlfeisQ/exec";
+    // ▶ Your Google Form “formResponse” endpoint (convert “viewform”→“formResponse”)
+    const FORM_URL     = "https://docs.google.com/forms/d/e/1FAIpQLSfH06fe0zG2LKqIWLu6gdFXb3Rv1zoAUusVZZSPKDc6u-ubMw/formResponse";
+    const ENTRY_BUTTON = "entry.77279833";   // from your prefilled URL
+    const ENTRY_TIME   = "entry.1243442333"; // from your prefilled URL
 
     function logClick(buttonName) {
-      const timestamp = new Date().toISOString();
-      // create form
-      const form = document.createElement('form');
-      form.action = loggingURL;
-      form.method = 'POST';
-      form.target = 'log_target';
-      // button field
-      const inputButton = document.createElement('input');
-      inputButton.type  = 'hidden';
-      inputButton.name  = 'button';
-      inputButton.value = buttonName;
-      form.appendChild(inputButton);
-      // time field
-      const inputTime = document.createElement('input');
-      inputTime.type  = 'hidden';
-      inputTime.name  = 'time';
-      inputTime.value = timestamp;
-      form.appendChild(inputTime);
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      const t = new Date().toISOString();
+      // fire off a no‑CORS GET via an Image beacon
+      new Image().src = FORM_URL
+        + "?" + ENTRY_BUTTON + "=" + encodeURIComponent(buttonName)
+        + "&" + ENTRY_TIME   + "=" + encodeURIComponent(t)
+        + "&submit=Submit";
     }
+
+    const startButton   = document.getElementById('startButton');
+    const gameContainer = document.getElementById('game-container');
+    const resultDiv     = document.getElementById('result');
 
     startButton.addEventListener('click', () => {
       startButton.style.display   = 'none';
@@ -79,7 +88,7 @@
       logClick('Coffee');
       resultDiv.innerHTML = `
         <p>You found <strong>Block Cafe</strong>!</p>
-        <img src="block-cafe.jpeg" alt="Block Cafe">
+        <img src="the block.jpeg" alt="Block Cafe">
       `;
     });
 
@@ -87,7 +96,7 @@
       logClick('Cookies');
       resultDiv.innerHTML = `
         <p>You found <strong>Saint Jean Cafe</strong>!</p>
-        <img src="saint-jean.jpeg" alt="Saint Jean Cafe">
+        <img src="saint jean.jpeg" alt="Saint Jean Cafe">
       `;
     });
   </script>
