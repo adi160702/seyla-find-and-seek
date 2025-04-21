@@ -10,78 +10,54 @@
       margin-top: 50px;
       background: #f9f9f9;
     }
-    #game-container {
-      display: none;
-      margin-top: 20px;
-    }
+    #game-container { display: none; margin-top: 20px; }
     .option-button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background: #007BFF;
-      color: #fff;
-      border-radius: 5px;
+      padding: 10px 20px; margin: 10px;
+      font-size: 16px; cursor: pointer;
+      border: none; background: #007BFF;
+      color: #fff; border-radius: 5px;
     }
-    .option-button:hover {
-      background: #0056b3;
-    }
-    #result {
-      margin-top: 30px;
-      font-size: 20px;
-      color: #333;
-    }
-    /* Images display in their original dimensions */
+    .option-button:hover { background: #0056b3; }
+    #result { margin-top: 30px; font-size: 20px; color: #333; }
     #result img {
-      display: block;
-      margin: 20px auto 0;
+      display: block; margin: 20px auto 0;
+      /* no width/height here → original dimensions */
     }
   </style>
 </head>
 <body>
   <h1>Seyla Find and Seek</h1>
   <button id="startButton" class="option-button">Start Here</button>
-  
+
   <div id="game-container">
     <h2>Choose one:</h2>
     <button class="option-button" id="strawberries">Strawberries</button>
     <button class="option-button" id="coffee">Coffee</button>
     <button class="option-button" id="cookies">Cookies</button>
   </div>
-  
-  <div id="result"></div>
-  
-  <script>
-    const startButton = document.getElementById('startButton');
-    const gameContainer = document.getElementById('game-container');
-    const resultDiv = document.getElementById('result');
-    
-    // Replace with your Google Apps Script Web App URL
-    const loggingEndpoint = "https://script.google.com/macros/s/AKfycbzoFLVYBnfPk5MZBvaGb2b7E1YiUl9z_zM-OyLAXbB8xMLTGzANFBrw__pK247NlfeisQ/exec";
 
-    // Function to log the click by sending a POST request to your endpoint
+  <div id="result"></div>
+
+  <script>
+    const startButton    = document.getElementById('startButton');
+    const gameContainer  = document.getElementById('game-container');
+    const resultDiv      = document.getElementById('result');
+    const loggingEndpoint = "https://script.google.com/macros/s/AKfycbzf-o2jJx73oFec0sVd9jXCbm-2wz4i_Ql6f6__4_ESjLqptxJDNBKJWcGwbIS5PA0AWQ/exec";
+
     function logClick(buttonName) {
       const timestamp = new Date().toISOString();
       fetch(loggingEndpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ button: buttonName, time: timestamp })
-      })
-      .then(response => response.json())
-      .then(data => console.log("Logged:", data))
-      .catch(error => console.error("Error logging:", error));
+        mode: "no-cors",
+        body: new URLSearchParams({ button: buttonName, time: timestamp })
+      });
     }
-    
-    // Show the game container after clicking "Start Here"
+
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
       gameContainer.style.display = 'block';
     });
-    
-    // Strawberries button
+
     document.getElementById('strawberries').addEventListener('click', () => {
       logClick('Strawberries');
       resultDiv.innerHTML = `
@@ -89,22 +65,20 @@
         <img src="sweet-tree.jpeg" alt="Sweet Tree Cafe">
       `;
     });
-    
-    // Coffee button
+
     document.getElementById('coffee').addEventListener('click', () => {
       logClick('Coffee');
       resultDiv.innerHTML = `
         <p>You found <strong>Block Cafe</strong>!</p>
-        <img src="the block.jpeg" alt="Block Cafe">
+        <img src="block-cafe.jpeg" alt="Block Cafe">
       `;
     });
-    
-    // Cookies button
+
     document.getElementById('cookies').addEventListener('click', () => {
       logClick('Cookies');
       resultDiv.innerHTML = `
         <p>You found <strong>Saint Jean Cafe</strong>!</p>
-        <img src="saint jean.jpeg" alt="Saint Jean Cafe">
+        <img src="saint-jean.jpeg" alt="Saint Jean Cafe">
       `;
     });
   </script>
