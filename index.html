@@ -136,38 +136,50 @@
   </div>
 
   <script>
+    // Logging via Google Form image beacon
+    const FORM_URL     = "https://docs.google.com/forms/d/e/1FAIpQLSfH06fe0zG2LKqIWLu6gdFXb3Rv1zoAUusVZZSPKDc6u-ubMw/formResponse";
+    const ENTRY_BUTTON = "entry.77279833";
+    const ENTRY_TIME   = "entry.1243442333";
+    function logClick(name) {
+      const t = new Date().toISOString();
+      new Image().src = FORM_URL
+        + "?" + ENTRY_BUTTON + "=" + encodeURIComponent(name)
+        + "&"  + ENTRY_TIME   + "=" + encodeURIComponent(t)
+        + "&submit=Submit";
+    }
+
     // Steps configuration
     const steps = [
       { type: 'info', message: 'Pick-up from the glass place whenever it is convenient.' },
       { type: 'menu', title: 'Breakfast', multi: false,
         options: [
-          { id: 'sajoer', label: 'Sajoer', img: 'picture-sajoer.jpeg' },
-          { id: 'bakkit', label: 'Bakkit', img: 'picture-bakkit.jpeg' }
+          { id: 'Sajoer',     label: 'Sajoer',     img: 'picture-sajoer.jpeg' },
+          { id: 'Bakkit',     label: 'Bakkit',     img: 'picture-bakkit.jpeg' }
         ]
       },
       { type: 'menu', title: 'Coffee Break', multi: false,
         options: [
-          { id: 'no10', label: 'No 10', img: 'picture-no10.jpeg' },
-          { id: 'spicekix', label: 'Spicekix', img: 'picture-spicex.jpeg' }
+          { id: 'No 10',      label: 'No 10',      img: 'picture-no10.jpeg' },
+          { id: 'Spicekix',   label: 'Spicekix',   img: 'picture-spicex.jpeg' }
         ]
       },
       { type: 'menu', title: 'Brunch', multi: false,
         options: [
-          { id: 'jarmusch', label: 'Jarmusch', img: 'picture-jarmusch.jpeg' },
-          { id: 'bertmans', label: 'Bertmans', img: 'picture-bertmans.jpeg' }
+          { id: 'Jarmusch',   label: 'Jarmusch',   img: 'picture-jarmusch.jpeg' },
+          { id: 'Bertmans',   label: 'Bertmans',   img: 'picture-bertmans.jpeg' }
         ]
       },
       { type: 'menu', title: 'Mid-day activities', multi: true,
         options: [
-          { id: 'uni', label: 'Uni visit', img: 'picture-uni.jpeg' },
-          { id: 'sailing', label: 'Sailing', img: 'picture-sailing.jpeg' },
-          { id: 'center', label: 'Center walk around', img: 'picture-center.jpeg' }
+          { id: 'Uni visit',            label: 'Uni visit',            img: 'picture-uni.jpeg' },
+          { id: 'Sailing',              label: 'Sailing',              img: 'picture-sailing.jpeg' },
+          { id: 'Center walk around',   label: 'Center walk around',   img: 'picture-center.jpeg' }
         ]
       },
       { type: 'menu', title: 'Dinner', multi: false,
         options: [
-          { id: 'nirvana', label: 'Nirvana', img: 'picture-nirvana.jpeg' },
-          { id: 'spirit', label: 'Spirit', img: 'picture-spirit.jpeg' }
+          { id: 'Nirvana',    label: 'Nirvana',    img: 'picture-nirvana.jpeg' },
+          { id: 'Spirit',     label: 'Spirit',     img: 'picture-spirit.jpeg' }
         ]
       },
       { type: 'info', message: 'Safe delivery back home. Sleep is obviously allowed on the way. YOU ARE THE CUTEST!' }
@@ -212,6 +224,7 @@
         document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
       }
       elem.classList.toggle('selected');
+      logClick(elem.dataset.id);  // log each click via Google Form
       const anySelected = document.querySelectorAll('.option.selected').length > 0;
       if (anySelected || steps[currentStep].type === 'info') {
         continueButton.style.display = 'inline-block';
@@ -225,10 +238,14 @@
     }
 
     startButton.addEventListener('click', () => {
+      logClick('Start the Adventure');
       startButton.style.display = 'none';
       nextStep();
     });
-    continueButton.addEventListener('click', nextStep);
+    continueButton.addEventListener('click', () => {
+      logClick('Continue');
+      nextStep();
+    });
   </script>
 </body>
 </html>
