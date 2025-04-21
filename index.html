@@ -3,70 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <title>Seyla Find and Seek</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Confetti library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
+    /* Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-      background: #f9f9f9;
-    }
-    #game-container {
-      display: none;
-      margin-top: 20px;
-    }
-    .option-button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background: #007BFF;
-      color: #fff;
-      border-radius: 5px;
-    }
-    .option-button:hover {
-      background: #0056b3;
-    }
-    #result {
-      margin-top: 30px;
-      font-size: 20px;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #333;
     }
+    /* Frosted‑glass card */
+    #container {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    h1 { font-weight: 600; margin-bottom: 24px; }
+    /* Buttons */
+    .option-button {
+      padding: 12px 24px;
+      margin: 12px 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: #ff758c;
+      color: #fff;
+      border-radius: 50px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .option-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    /* Result area */
+    #result {
+      margin-top: 30px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    #result.visible { opacity: 1; }
     #result img {
       display: block;
       margin: 20px auto 0;
-      /* original dimensions preserved */
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
-  <h1>Seyla Find and Seek</h1>
-  <button id="startButton" class="option-button">Start Here</button>
-
-  <div id="game-container">
-    <h2>Choose one:</h2>
-    <button class="option-button" id="strawberries">Strawberries</button>
-    <button class="option-button" id="coffee">Coffee</button>
-    <button class="option-button" id="cookies">Cookies</button>
+  <div id="container">
+    <h1>Seyla Find and Seek</h1>
+    <button id="startButton" class="option-button">Start Here</button>
+    <div id="game-container" style="display:none;">
+      <h2>Choose one:</h2>
+      <button class="option-button" id="strawberries">Strawberries</button>
+      <button class="option-button" id="coffee">Coffee</button>
+      <button class="option-button" id="cookies">Cookies</button>
+    </div>
+    <div id="result"></div>
   </div>
 
-  <div id="result"></div>
-
   <script>
-    // ▶ Your Google Form “formResponse” endpoint (convert “viewform”→“formResponse”)
+    // Logging (image‑beacon) unchanged
     const FORM_URL     = "https://docs.google.com/forms/d/e/1FAIpQLSfH06fe0zG2LKqIWLu6gdFXb3Rv1zoAUusVZZSPKDc6u-ubMw/formResponse";
-    const ENTRY_BUTTON = "entry.77279833";   // from your prefilled URL
-    const ENTRY_TIME   = "entry.1243442333"; // from your prefilled URL
-
+    const ENTRY_BUTTON = "entry.77279833";
+    const ENTRY_TIME   = "entry.1243442333";
     function logClick(buttonName) {
       const t = new Date().toISOString();
-      // fire off a no‑CORS GET via an Image beacon
       new Image().src = FORM_URL
         + "?" + ENTRY_BUTTON + "=" + encodeURIComponent(buttonName)
         + "&" + ENTRY_TIME   + "=" + encodeURIComponent(t)
         + "&submit=Submit";
     }
 
+    // UI Logic
     const startButton   = document.getElementById('startButton');
     const gameContainer = document.getElementById('game-container');
     const resultDiv     = document.getElementById('result');
@@ -76,28 +98,28 @@
       gameContainer.style.display = 'block';
     });
 
+    function showResult(text, imgSrc, alt) {
+      // trigger confetti
+      confetti({ spread: 60, origin: { y: 0.6 } });
+      // display
+      resultDiv.innerHTML = `
+        <p>${text}</p>
+        <img src="${imgSrc}" alt="${alt}">
+      `;
+      resultDiv.classList.add('visible');
+    }
+
     document.getElementById('strawberries').addEventListener('click', () => {
       logClick('Strawberries');
-      resultDiv.innerHTML = `
-        <p>You found <strong>Sweet Tree Cafe</strong>!</p>
-        <img src="sweet-tree.jpeg" alt="Sweet Tree Cafe">
-      `;
+      showResult('You found <strong>Sweet Tree Cafe</strong>!', 'sweet-tree.jpeg', 'Sweet Tree Cafe');
     });
-
     document.getElementById('coffee').addEventListener('click', () => {
       logClick('Coffee');
-      resultDiv.innerHTML = `
-        <p>You found <strong>Block Cafe</strong>!</p>
-        <img src="the block.jpeg" alt="Block Cafe">
-      `;
+      showResult('You found <strong>Block Cafe</strong>!', 'the block.jpeg', 'Block Cafe');
     });
-
     document.getElementById('cookies').addEventListener('click', () => {
       logClick('Cookies');
-      resultDiv.innerHTML = `
-        <p>You found <strong>Saint Jean Cafe</strong>!</p>
-        <img src="saint jean.jpeg" alt="Saint Jean Cafe">
-      `;
+      showResult('You found <strong>Saint Jean Cafe</strong>!', 'saint jean.jpeg', 'Saint Jean Cafe');
     });
   </script>
 </body>
