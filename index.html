@@ -2,39 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Seyla Find and Seek</title>
+  <title>Princess Day Trip &amp; Em Meet-up | Rotterdam Wednesday</title>
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <!-- Confetti library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
-    /* Base */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #333;
+      padding: 20px;
     }
-    /* Frosted‑glass card */
+    /* Frosted container */
     #container {
       background: rgba(255,255,255,0.8);
       backdrop-filter: blur(10px);
       border-radius: 16px;
-      padding: 40px;
-      max-width: 360px;
-      width: 90%;
-      text-align: center;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
       box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     }
-    h1 { font-weight: 600; margin-bottom: 24px; }
-    /* Buttons */
+    /* Header with images and title */
+    #header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    #header img {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    #header h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      flex: 1;
+      margin: 0 10px;
+    }
     .option-button {
       padding: 12px 24px;
-      margin: 12px 6px;
+      margin: 10px 6px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
@@ -48,79 +62,170 @@
       transform: scale(1.05);
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    /* Result area */
-    #result {
-      margin-top: 30px;
-      opacity: 0;
-      transition: opacity 0.5s ease-in;
+    #startButton, #continueButton {
+      display: inline-block;
     }
-    #result.visible { opacity: 1; }
-    #result img {
-      display: block;
-      margin: 20px auto 0;
+    #continueButton {
+      display: none;
+      margin-top: 20px;
+    }
+    #content {
+      text-align: center;
+    }
+    #message {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .menu {
+      margin-top: 20px;
+    }
+    .menu-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .option {
+      margin: 10px;
+      cursor: pointer;
+      text-align: center;
+      border: 2px solid transparent;
       border-radius: 12px;
+      padding: 10px;
+      transition: border-color 0.2s;
+    }
+    .option.selected {
+      border-color: #ff758c;
+    }
+    .option img {
+      display: block;
+      max-width: 100px;
+      height: auto;
+      margin-bottom: 6px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <h1>Seyla Find and Seek</h1>
-    <button id="startButton" class="option-button">Start Here</button>
-    <div id="game-container" style="display:none;">
-      <h2>Choose one:</h2>
-      <button class="option-button" id="strawberries">Strawberries</button>
-      <button class="option-button" id="coffee">Coffee</button>
-      <button class="option-button" id="cookies">Cookies</button>
+    <div id="header">
+      <img src="picture-seyla.jpeg" alt="Seyla">
+      <h1>Princess Day Trip &amp; Em Meet-up | Rotterdam Wednesday</h1>
+      <img src="picture-princess.jpeg" alt="Princess">
     </div>
-    <div id="result"></div>
+    <div id="content">
+      <!-- Initial Start -->
+      <button id="startButton" class="option-button">Start the Adventure</button>
+      
+      <!-- Dynamic content here -->
+      <div id="message"></div>
+      <div class="menu" id="menu"></div>
+      <button id="continueButton" class="option-button">Continue</button>
+    </div>
   </div>
 
   <script>
-    // Logging (image‑beacon) unchanged
-    const FORM_URL     = "https://docs.google.com/forms/d/e/1FAIpQLSfH06fe0zG2LKqIWLu6gdFXb3Rv1zoAUusVZZSPKDc6u-ubMw/formResponse";
-    const ENTRY_BUTTON = "entry.77279833";
-    const ENTRY_TIME   = "entry.1243442333";
-    function logClick(buttonName) {
-      const t = new Date().toISOString();
-      new Image().src = FORM_URL
-        + "?" + ENTRY_BUTTON + "=" + encodeURIComponent(buttonName)
-        + "&" + ENTRY_TIME   + "=" + encodeURIComponent(t)
-        + "&submit=Submit";
+    // Steps configuration
+    const steps = [
+      { type: 'info', message: 'Pick-up from the glass place whenever it is convenient.' },
+      { type: 'menu', title: 'Breakfast', multi: false,
+        options: [
+          { id: 'sajoer', label: 'Sajoer', img: 'picture-sajoer.jpeg' },
+          { id: 'bakkit', label: 'Bakkit', img: 'picture-bakkit.jpeg' }
+        ]
+      },
+      { type: 'menu', title: 'Coffee Break', multi: false,
+        options: [
+          { id: 'no10', label: 'No 10', img: 'picture-no10.jpeg' },
+          { id: 'spicekix', label: 'Spicekix', img: 'picture-spicex.jpeg' }
+        ]
+      },
+      { type: 'menu', title: 'Brunch', multi: false,
+        options: [
+          { id: 'jarmusch', label: 'Jarmusch', img: 'picture-jarmusch.jpeg' },
+          { id: 'bertmans', label: 'Bertmans', img: 'picture-bertmans.jpeg' }
+        ]
+      },
+      { type: 'menu', title: 'Mid-day activities', multi: true,
+        options: [
+          { id: 'uni', label: 'Uni visit', img: 'picture-uni.jpeg' },
+          { id: 'sailing', label: 'Sailing', img: 'picture-sailing.jpeg' },
+          { id: 'center', label: 'Center walk around', img: 'picture-center.jpeg' }
+        ]
+      },
+      { type: 'menu', title: 'Dinner', multi: false,
+        options: [
+          { id: 'nirvana', label: 'Nirvana', img: 'picture-nirvana.jpeg' },
+          { id: 'spirit', label: 'Spirit', img: 'picture-spirit.jpeg' }
+        ]
+      },
+      { type: 'info', message: 'Safe delivery back home. Sleep is obviously allowed on the way. YOU ARE THE CUTEST!' }
+    ];
+
+    let currentStep = -1;
+    const startButton = document.getElementById('startButton');
+    const continueButton = document.getElementById('continueButton');
+    const messageDiv = document.getElementById('message');
+    const menuDiv = document.getElementById('menu');
+
+    function renderStep() {
+      const step = steps[currentStep];
+      messageDiv.textContent = '';
+      menuDiv.innerHTML = '';
+      continueButton.style.display = 'none';
+
+      if (step.type === 'info') {
+        messageDiv.textContent = step.message;
+        continueButton.style.display = 'inline-block';
+      } else if (step.type === 'menu') {
+        // title
+        const titleElem = document.createElement('div');
+        titleElem.className = 'menu-title';
+        titleElem.textContent = step.title;
+        menuDiv.appendChild(titleElem);
+        // options
+        const optsContainer = document.createElement('div');
+        optsContainer.className = 'options';
+        step.options.forEach(opt => {
+          const optElem = document.createElement('div');
+          optElem.className = 'option';
+          optElem.dataset.id = opt.id;
+          optElem.innerHTML = `<img src="${opt.img}" alt="${opt.label}"><div>${opt.label}</div>`;
+          optElem.addEventListener('click', () => selectOption(optElem, step.multi));
+          optsContainer.appendChild(optElem);
+        });
+        menuDiv.appendChild(optsContainer);
+      }
     }
 
-    // UI Logic
-    const startButton   = document.getElementById('startButton');
-    const gameContainer = document.getElementById('game-container');
-    const resultDiv     = document.getElementById('result');
+    function selectOption(elem, multi) {
+      if (!multi) {
+        // unselect siblings
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      }
+      elem.classList.toggle('selected');
+      // show continue if at least one selected or info
+      const anySelected = document.querySelectorAll('.option.selected').length > 0;
+      if (anySelected || steps[currentStep].type === 'info') {
+        continueButton.style.display = 'inline-block';
+      }
+    }
+
+    function nextStep() {
+      currentStep++;
+      if (currentStep >= steps.length) return;
+      renderStep();
+    }
 
     startButton.addEventListener('click', () => {
-      startButton.style.display   = 'none';
-      gameContainer.style.display = 'block';
+      startButton.style.display = 'none';
+      nextStep();
     });
-
-    function showResult(text, imgSrc, alt) {
-      // trigger confetti
-      confetti({ spread: 60, origin: { y: 0.6 } });
-      // display
-      resultDiv.innerHTML = `
-        <p>${text}</p>
-        <img src="${imgSrc}" alt="${alt}">
-      `;
-      resultDiv.classList.add('visible');
-    }
-
-    document.getElementById('strawberries').addEventListener('click', () => {
-      logClick('Strawberries');
-      showResult('You found <strong>Sweet Tree Cafe</strong>!', 'sweet-tree.jpeg', 'Sweet Tree Cafe');
-    });
-    document.getElementById('coffee').addEventListener('click', () => {
-      logClick('Coffee');
-      showResult('You found <strong>Block Cafe</strong>!', 'the block.jpeg', 'Block Cafe');
-    });
-    document.getElementById('cookies').addEventListener('click', () => {
-      logClick('Cookies');
-      showResult('You found <strong>Saint Jean Cafe</strong>!', 'saint jean.jpeg', 'Saint Jean Cafe');
-    });
+    continueButton.addEventListener('click', nextStep);
   </script>
 </body>
 </html>
