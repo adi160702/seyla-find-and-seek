@@ -39,6 +39,13 @@
       border-radius: 50%;
       object-fit: cover;
     }
+    /* Adjust object-position to show the head correctly */
+    #seyla-img {
+      object-position: center 20%; /* bring image down to reveal head */
+    }
+    #princess-img {
+      object-position: center 80%; /* adjust to reveal her head */
+    }
     #header h1 {
       font-size: 1.2rem;
       font-weight: 600;
@@ -113,9 +120,9 @@
 <body>
   <div id="container">
     <div id="header">
-      <img src="picture-seyla.jpeg" alt="Seyla">
+      <img id="seyla-img" src="picture-seyla.jpeg" alt="Seyla">
       <h1>Princess Day Trip &amp; Em Meet-up | Rotterdam Wednesday</h1>
-      <img src="picture-princess.jpeg" alt="Princess">
+      <img id="princess-img" src="picture-princess.jpeg" alt="Princess">
     </div>
     <div id="content">
       <!-- Initial Start -->
@@ -182,12 +189,10 @@
         messageDiv.textContent = step.message;
         continueButton.style.display = 'inline-block';
       } else if (step.type === 'menu') {
-        // title
         const titleElem = document.createElement('div');
         titleElem.className = 'menu-title';
         titleElem.textContent = step.title;
         menuDiv.appendChild(titleElem);
-        // options
         const optsContainer = document.createElement('div');
         optsContainer.className = 'options';
         step.options.forEach(opt => {
@@ -204,11 +209,9 @@
 
     function selectOption(elem, multi) {
       if (!multi) {
-        // unselect siblings
         document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
       }
       elem.classList.toggle('selected');
-      // show continue if at least one selected or info
       const anySelected = document.querySelectorAll('.option.selected').length > 0;
       if (anySelected || steps[currentStep].type === 'info') {
         continueButton.style.display = 'inline-block';
